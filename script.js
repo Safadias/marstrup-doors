@@ -1,3 +1,4 @@
+
 function calculate() {
   const name = document.getElementById("name").value;
   const address = document.getElementById("address").value;
@@ -67,15 +68,23 @@ Lågehøjde: ${(decorHeight / 10).toFixed(2)} cm
 Lågebredde: ${(decorWidth / 10).toFixed(2)} cm
   `;
   document.getElementById("output").textContent = out;
-  document.getElementById("pdfBtn").style.display = 'block';
+  document.getElementById("calcForm").style.display = "none";
+  document.getElementById("pdfBtn").style.display = "block";
+  document.getElementById("backBtn").style.display = "block";
 }
 
 async function generatePDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
-
   const content = document.getElementById("output").textContent;
   const lines = doc.splitTextToSize(content, 180);
   doc.text(lines, 10, 10);
   doc.save("MarstrupDoors_Beregning.pdf");
+}
+
+function goBack() {
+  document.getElementById("calcForm").style.display = "block";
+  document.getElementById("output").textContent = "";
+  document.getElementById("pdfBtn").style.display = "none";
+  document.getElementById("backBtn").style.display = "none";
 }
