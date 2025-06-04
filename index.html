@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <title>Marstrup Doors</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Marstrup Doors</h1>
+  <form id="calcForm">
+    <label>Navn: <input type="text" id="name" /></label><br/>
+    <label>Adresse: <input type="text" id="address" /></label><br/>
+    <label>Email: <input type="email" id="email" /></label><br/>
+    <label>Ordrenummer: <input type="text" id="order" /></label><br/>
+    <label>Højde (cm): <input type="number" id="height" /></label><br/>
+    <label>Bredde (cm): <input type="number" id="width" /></label><br/>
+    <label>Antal låger: <input type="number" id="doors" /></label><br/>
+    <button type="button" onclick="calculate()">Beregn</button>
+    <button type="button" id="pdfBtn" onclick="generatePDF()" style="display:none;">📄 PDF</button>
+  </form>
+  <pre id="output"></pre>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
