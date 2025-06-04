@@ -1,3 +1,5 @@
+let latestPDFBlob = null;
+let latestPDFName = "";
 
 function calculate() {
   const name = document.getElementById("name").value;
@@ -56,7 +58,7 @@ ${doors * 2} top/bund: ${(topBottom / 10).toFixed(2)} cm
 Sprøsser: ${(sprosser / 10).toFixed(2)} cm
 Placering ved 1 sprøsse: ${(place1 / 10).toFixed(2)} cm
 Placering ved 2 sprøsser: ${(place2 / 10).toFixed(2)} cm
-Placering ved 3 sprøsser: ${(place3 / 10).toFixed(2)} cm
+Placering ved 3 sprøsse: ${(place3 / 10).toFixed(2)} cm
 
 Fyldningsstørrelse:
 Glas:
@@ -66,24 +68,52 @@ Lågebredde: ${(glasWidth / 10).toFixed(2)} cm
 Decor:
 Lågehøjde: ${(decorHeight / 10).toFixed(2)} cm
 Lågebredde: ${(decorWidth / 10).toFixed(2)} cm
-  `;
+`;
+
   document.getElementById("output").textContent = out;
   document.getElementById("calcForm").style.display = "none";
   document.getElementById("pdfBtn").style.display = "block";
   document.getElementById("backBtn").style.display = "block";
+  document.getElementById("shareBtn").style.display = "block";
+
+  // Gem PDF blob til deling
+  generatePDF(true);
 }
 
-async function generatePDF() {
+async function generatePDF(silent = false) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
-  const name = document.getElementById("name").value.trim().replace(/\s+/g, "_");
   const content = document.getElementById("output").textContent;
+  const name = document.getElementById("name").value.trim().replace(/\s+/g, "_");
+  latestPDFName = name ? `MarstrupDoors_${name}.pdf` : "MarstrupDoors_Beregning.pdf";
+
   const lines = doc.splitTextToSize(content, 180);
   doc.text(lines, 10, 10);
 
-  const filename = name ? `MarstrupDoors_${name}.pdf` : "MarstrupDoors_Beregning.pdf";
-  doc.save(filename);
+  const blob = doc.output("blob");
+  latestPDFBlob = new File([blob], latestPDFName, { type: "application/pdf" });
+
+  if (!silent) {
+    doc.save(latestPDFName);
+  }
+}
+
+async function sharePDF() {
+  if (!navigator.canShare || !navigator.canShare({ files: [latestPDFBlob] })) {
+    alert("Din enhed understøtter ikke deling af filer.");
+    return;
+  }
+
+  try {
+    await navigator.share({
+      title: "Marstrup Doors Beregning",
+      text: "Her er beregningen fra Marstrup Doors.",
+      files: [latestPDFBlob],
+    });
+  } catch (err) {
+    console.error("Deling annulleret eller fejlede", err);
+  }
 }
 
 function goBack() {
@@ -91,4 +121,5 @@ function goBack() {
   document.getElementById("output").textContent = "";
   document.getElementById("pdfBtn").style.display = "none";
   document.getElementById("backBtn").style.display = "none";
+  document.getElementById("shareBtn").style.display = "none";
 }
