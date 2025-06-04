@@ -72,7 +72,6 @@ Lågebredde: ${(decorWidth / 10).toFixed(2)} cm
 
   document.getElementById("output").textContent = out;
   document.getElementById("calcForm").style.display = "none";
-  document.getElementById("pdfBtn").style.display = "block";
   document.getElementById("backBtn").style.display = "block";
   document.getElementById("shareBtn").style.display = "block";
 
@@ -119,7 +118,6 @@ async function sharePDF() {
 function goBack() {
   document.getElementById("calcForm").style.display = "block";
   document.getElementById("output").textContent = "";
-  document.getElementById("pdfBtn").style.display = "none";
   document.getElementById("backBtn").style.display = "none";
   document.getElementById("shareBtn").style.display = "none";
 }
