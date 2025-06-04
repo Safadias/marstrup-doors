@@ -76,10 +76,14 @@ Lågebredde: ${(decorWidth / 10).toFixed(2)} cm
 async function generatePDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
+
+  const name = document.getElementById("name").value.trim().replace(/\s+/g, "_");
   const content = document.getElementById("output").textContent;
   const lines = doc.splitTextToSize(content, 180);
   doc.text(lines, 10, 10);
-  doc.save("MarstrupDoors_Beregning.pdf");
+
+  const filename = name ? `MarstrupDoors_${name}.pdf` : "MarstrupDoors_Beregning.pdf";
+  doc.save(filename);
 }
 
 function goBack() {
