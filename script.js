@@ -70,7 +70,6 @@ Lågebredde: ${(decorWidth / 10).toFixed(2)} cm
   document.getElementById("output").textContent = out;
   document.getElementById("pdfBtn").style.display = 'block';
 }
-\n
 async function generatePDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
