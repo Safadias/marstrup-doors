@@ -27,10 +27,13 @@
     <label>Bredde (cm): <input type="number" id="width" /></label><br/>
     <label>Antal låger: <input type="number" id="doors" /></label><br/>
     <button type="button" onclick="calculate()">Beregn</button>
-    <button type="button" id="pdfBtn" onclick="generatePDF()" style="display:none;">📄 PDF</button>
   </form>
   <pre id="output"></pre>
+  <button id="pdfBtn" onclick="generatePDF()" style="display:none;">📄 PDF</button>
+  <button id="backBtn" onclick="goBack()" style="display:none;">🔙 Rediger</button>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
+
