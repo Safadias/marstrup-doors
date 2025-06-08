@@ -1,6 +1,3 @@
-let latestPDFBlob = null;
-let latestPDFName = "";
-
 function calculate() {
   const name = document.getElementById("name").value;
   const address = document.getElementById("address").value;
@@ -39,7 +36,7 @@ function calculate() {
   const glasHeight = heightMM - GlassHeightCal;
   const glasWidth = doorWidthMM - GlassWidthCal;
   const decorHeight = heightMM - DecorHeightCal;
-  const decorWidth = doorWidthMM - DecorWidthCal + 3;
+  const decorWidth = doorWidthMM - DecorWidthCal + 3; // +3 mm som ønsket
 
   const today = new Date().toLocaleDateString("da-DK");
   const out = `
@@ -50,74 +47,58 @@ Email: ${email}
 Ordrenummer: ${order}
 
 Udregning af lågebredde ved ${doors} døre:
-Lågebredde: ${(doorWidthMM / 10).toFixed(2)} cm
+Lågebredde: ${(doorWidthMM / 10).toFixed(1)} cm
 
 Profilstørrelse:
-${doors * 2} sider med højde: ${(profileHeight / 10).toFixed(2)} cm
-${doors * 2} top/bund: ${(topBottom / 10).toFixed(2)} cm
-Sprøsser: ${(sprosser / 10).toFixed(2)} cm
-Placering ved 1 sprøsse: ${(place1 / 10).toFixed(2)} cm
-Placering ved 2 sprøsser: ${(place2 / 10).toFixed(2)} cm
-Placering ved 3 sprøsse: ${(place3 / 10).toFixed(2)} cm
+${doors * 2} sider med højde: ${(profileHeight / 10).toFixed(1)} cm
+${doors * 2} top/bund: ${(topBottom / 10).toFixed(1)} cm
+Sprøsser: ${(sprosser / 10).toFixed(1)} cm
+Placering ved 1 sprøsse: ${(place1 / 10).toFixed(1)} cm
+Placering ved 2 sprøsser: ${(place2 / 10).toFixed(1)} cm
+Placering ved 3 sprøsser: ${(place3 / 10).toFixed(1)} cm
 
 Fyldningsstørrelse:
 Glas:
-Lågehøjde: ${(glasHeight / 10).toFixed(2)} cm
-Lågebredde: ${(glasWidth / 10).toFixed(2)} cm
+Lågehøjde: ${(glasHeight / 10).toFixed(1)} cm
+Lågebredde: ${(glasWidth / 10).toFixed(1)} cm
 
 Decor:
-Lågehøjde: ${(decorHeight / 10).toFixed(2)} cm
-Lågebredde: ${(decorWidth / 10).toFixed(2)} cm
-`;
+Lågehøjde: ${(decorHeight / 10).toFixed(1)} cm
+Lågebredde: ${(decorWidth / 10).toFixed(1)} cm
+  `;
 
   document.getElementById("output").textContent = out;
   document.getElementById("calcForm").style.display = "none";
-  document.getElementById("backBtn").style.display = "block";
   document.getElementById("shareBtn").style.display = "block";
-
-  // Gem PDF blob til deling
-  generatePDF(true);
+  document.getElementById("backBtn").style.display = "block";
 }
 
-async function generatePDF(silent = false) {
+async function generatePDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
   const content = document.getElementById("output").textContent;
-  const name = document.getElementById("name").value.trim().replace(/\s+/g, "_");
-  latestPDFName = name ? `MarstrupDoors_${name}.pdf` : "MarstrupDoors_Beregning.pdf";
-
   const lines = doc.splitTextToSize(content, 180);
   doc.text(lines, 10, 10);
 
+  const name = document.getElementById("name").value.trim() || "MarstrupDoors";
   const blob = doc.output("blob");
-  latestPDFBlob = new File([blob], latestPDFName, { type: "application/pdf" });
 
-  if (!silent) {
-    doc.save(latestPDFName);
-  }
-}
-
-async function sharePDF() {
-  if (!navigator.canShare || !navigator.canShare({ files: [latestPDFBlob] })) {
-    alert("Din enhed understøtter ikke deling af filer.");
-    return;
-  }
-
-  try {
+  if (navigator.canShare && navigator.canShare({ files: [new File([blob], `${name}.pdf`, { type: "application/pdf" })] })) {
+    const file = new File([blob], `${name}.pdf`, { type: "application/pdf" });
     await navigator.share({
+      files: [file],
       title: "Marstrup Doors Beregning",
-      text: "Her er beregningen fra Marstrup Doors.",
-      files: [latestPDFBlob],
+      text: "Se vedhæftet beregning."
     });
-  } catch (err) {
-    console.error("Deling annulleret eller fejlede", err);
+  } else {
+    doc.save(`${name}.pdf`);
   }
 }
 
 function goBack() {
   document.getElementById("calcForm").style.display = "block";
   document.getElementById("output").textContent = "";
-  document.getElementById("backBtn").style.display = "none";
   document.getElementById("shareBtn").style.display = "none";
+  document.getElementById("backBtn").style.display = "none";
 }
