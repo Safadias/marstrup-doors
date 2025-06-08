@@ -39,7 +39,7 @@ function calculate() {
   const glasHeight = heightMM - GlassHeightCal;
   const glasWidth = doorWidthMM - GlassWidthCal;
   const decorHeight = heightMM - DecorHeightCal;
-  const decorWidth = doorWidthMM - DecorWidthCal;
+  const decorWidth = doorWidthMM - DecorWidthCal + 3;
 
   const today = new Date().toLocaleDateString("da-DK");
   const out = `
