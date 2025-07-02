@@ -82,17 +82,24 @@ async function generatePDF() {
   doc.text(lines, 10, 10);
 
   const name = document.getElementById("name").value.trim() || "MarstrupDoors";
+  const pdfFileName = `${name}.pdf`;
   const blob = doc.output("blob");
+  const file = new File([blob], pdfFileName, { type: "application/pdf" });
 
-  if (navigator.canShare && navigator.canShare({ files: [new File([blob], `${name}.pdf`, { type: "application/pdf" })] })) {
-    const file = new File([blob], `${name}.pdf`, { type: "application/pdf" });
-    await navigator.share({
-      files: [file],
-      title: "Marstrup Doors Beregning",
-      text: "Se vedhæftet beregning."
-    });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try {
+      await navigator.share({
+        title: "Marstrup Doors Beregning",
+        text: "Her er PDF-beregningen.",
+        files: [file]
+      });
+    } catch (err) {
+      alert("Deling blev annulleret.");
+    }
   } else {
-    doc.save(`${name}.pdf`);
+    // fallback: download PDF hvis deling ikke understøttes
+    doc.save(pdfFileName);
+    alert("Deling understøttes ikke på denne enhed. PDF'en blev i stedet gemt.");
   }
 }
 
