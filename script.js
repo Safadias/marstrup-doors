@@ -115,3 +115,7 @@ function goBack() {
   document.getElementById("shareBtn").style.display = "none";
   document.getElementById("backBtn").style.display = "none";
 }
+
+function sharePDF() {
+  generatePDF();
+}
