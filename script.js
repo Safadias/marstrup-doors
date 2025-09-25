@@ -46,6 +46,12 @@ Adresse: ${address}
 Email: ${email}
 Ordrenummer: ${order}
 
+Indtastede mål:
+Højde: ${height} cm
+Bredde: ${width} cm
+Antal låger: ${doors}
+
+
 Udregning af lågebredde ved ${doors} døre:
 Lågebredde: ${(doorWidthMM / 10).toFixed(1)} cm
 
